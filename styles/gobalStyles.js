@@ -21,6 +21,14 @@ export const globalStyles = StyleSheet.create({
     borderRadius: 6,
   },
   buttonText: {
-    color: COLORS.text,
+    color: "white",
+  },
+  button: {
+    width: "100%",
+    backgroundColor: COLORS.primary,
+    borderRadius: 6,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

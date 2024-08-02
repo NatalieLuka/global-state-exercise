@@ -1,23 +1,80 @@
-import { View, Text } from "react-native";
-import { Link } from "expo-router";
+import { View, Text, Pressable, TextInput, StyleSheet } from "react-native";
+import { router } from "expo-router";
 import { globalStyles } from "../../styles/gobalStyles";
+import { COLORS } from "../../styles/constants";
+import { useState, useEffect } from "react";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useUser } from "../../context/UserContext";
 
 export default function HomePage() {
+  const [name, setName] = useState("");
+  const { user, login, logout } = useUser();
+
+  // switch to next site, when user is logged in
+  useEffect(() => {
+    if (user) {
+      router.push("/(myProfile)");
+    }
+  }, [user]);
+
   return (
     <>
-      <Text style={globalStyles.heading}>I am the Homepage</Text>
-      <Link style={globalStyles.paragraph} href="contact">
-        Go to Contacts
-      </Link>
-      <Link style={globalStyles.paragraph} href="animals/dogs">
-        Go to Dogs
-      </Link>
-      <Link style={globalStyles.paragraph} href="animals/cats">
-        Go to Cats
-      </Link>
-      <Link style={globalStyles.paragraph} href="animals">
-        Go to Animals
-      </Link>
+      <Text style={globalStyles.heading}>Hallo {user ? user + " " : null}</Text>
+      <Text>Willkommen auf unserer Website</Text>
+
+      <View style={styles.loginContainer}>
+        <Text style={globalStyles.paragraph}>
+          Login <MaterialIcons name="login" size={24} color="white" />
+        </Text>
+
+        <TextInput
+          placeholder="Name"
+          autoCapitalize="none"
+          value={name}
+          onChangeText={(text) => {
+            setName(text);
+          }}
+          style={styles.textInput}
+        />
+
+        <Pressable
+          onPress={() => {
+            login(name);
+          }}
+          title="Login"
+          style={globalStyles.button}
+        >
+          <Text style={globalStyles.buttonText}>Login</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            logout();
+          }}
+          title="Logout"
+          style={globalStyles.button}
+        >
+          <Text style={globalStyles.buttonText}>Logout</Text>
+        </Pressable>
+      </View>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  loginContainer: {
+    flex: 1,
+    gap: 10,
+    marginTop: 30,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    width: "100%",
+    height: 40,
+    borderRadius: 6,
+    padding: 8,
+    fontSize: 18,
+    color: COLORS.background,
+    backgroundColor: "white",
+  },
+});
